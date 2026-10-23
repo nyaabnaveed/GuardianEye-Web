@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuardianEye</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <aside class="sidebar">
+            
+            <button class="sidebar-toggle" id="sidebarToggle"
+                    type="button" aria-label="Collapse sidebar"
+                    aria-expanded="true">
+                ☰
+            </button>
+
+            <div class="brand">
+                <div class="brand-icon">G</div>
+                <div>
+                    <h2>GuardianEye</h2>
+                    <p>CYBERSECURITY SUITE</p>
+                </div>
+            </div>
+
+            <p class="nav-label">WORKSPACE</p>
+
+            <nav>
+                <a href="#dashboard" class="nav-link active">◈ &nbsp; Dashboard</a>                <a href="#password" class="nav-link">⌑ &nbsp; Password Analyzer</a>
+                <a href="#metadata" class="nav-link">▧ &nbsp; Metadata Scrubber</a>
+                <a href="#phishing" class="nav-link">⌁ &nbsp; Phishing Checker</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <span class="status-dot"></span>
+                Your security workspace
+                <p>GUARDIANEYE • PERSONAL CYBERSECURITY COMPANION</p>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <div id="dashboardView">
+                <header class="topbar">
+                    <div>
+                        <p class="eyebrow">PERSONAL CYBERSECURITY COMPANION</p>
+                        <h1>Security Dashboard<span>.</span></h1>
+                    </div>
+                    <div class="system-status">
+                        <span class="status-dot"></span>
+                        SYSTEM READY
+                    </div>
+                </header>
+            
+                <section class="welcome-section">
+                    <div>
+                        <p class="eyebrow">YOUR DIGITAL SAFETY, SIMPLIFIED</p>
+                        <h2>Stay one step ahead.</h2>
+                        <p class="welcome-description">
+                            Check your passwords, protect your file privacy,
+                            and identify suspicious links — all in one place.
+                        </p>
+                    </div>
+                    <div class="shield-art">⌑</div>
+                </section>
+            
+                <section class="section-heading">
+                    <div>
+                        <p class="eyebrow">SECURITY TOOLS</p>
+                        <h2>Your protection toolkit</h2>
+                    </div>
+                    <span class="tool-count">03 TOOLS</span>
+                </section>
+            
+                <section class="tools-grid">
+                
+                    <article class="tool-card" id="password">
+                        <div class="tool-icon password-icon">⌑</div>
+                        <p class="tool-number">TOOL 01</p>
+                        <h3>Password Analyzer</h3>
+                        <p>
+                            Evaluate password strength, detect common patterns,
+                            and get recommendations for stronger passwords.
+                        </p>
+                        <a href="#password" class="tool-link">
+                            Explore tool <span>↗</span>
+                        </a>
+                        <div class="card-accent"></div>
+                    </article>
+                
+                    <article class="tool-card" id="metadata">
+                        <div class="tool-icon metadata-icon">▧</div>
+                        <p class="tool-number">TOOL 02</p>
+                        <h3>Metadata Scrubber</h3>
+                        <p>
+                            Inspect supported files for hidden metadata and
+                            remove selected metadata to improve privacy.
+                        </p>
+                        <a href="#metadata" class="tool-link">
+                            Explore tool <span>↗</span>
+                        </a>
+                        <div class="card-accent"></div>
+                    </article>
+                
+                    <article class="tool-card" id="phishing">
+                        <div class="tool-icon phishing-icon">⌁</div>
+                        <p class="tool-number">TOOL 03</p>
+                        <h3>Phishing Checker</h3>
+                        <p>
+                            Examine suspicious URLs for potential warning signs
+                            before deciding whether to trust a link.
+                        </p>
+                        <a href="#phishing" class="tool-link">
+                            Explore tool <span>↗</span>
+                        </a>
+                        <div class="card-accent"></div>
+                    </article>
+                
+                </section>
+            
+                <footer class="page-footer">
+                    <span>GUARDIANEYE © 2026</span>
+                    <span>Think before you trust.</span>
+                </footer>
+            </div>
+            <!-- Password Analyzer View -->
+            <section class="feature-section tool-view" id="password-tool" hidden>                    <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">TOOL 01</p>
+                        <h2>Password Analyzer</h2>
+                    </div>
+                    <span class="tool-count">PRIVACY FIRST</span>
+                </div>
+            
+                <div class="feature-card">
+                    <label for="passwordInput">Enter a password to analyze</label>
+                
+                    <div class="password-input-group">
+                        <input
+                            type="password"
+                            id="passwordInput"
+                            placeholder="Type a test password..."
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                        <button type="button" id="togglePassword">
+                            Show
+                        </button>
+                    </div>
+                
+                    <p class="input-note">
+                        Your password is analyzed locally in your browser.
+                    </p>
+                
+                    <button type="button" id="analyzePassword">
+                        Analyze Password
+                    </button>
+                
+                    <div id="passwordResults" aria-live="polite" hidden>
+                        <h3 id="strengthLabel">Password Strength</h3>
+                        <div class="strength-track">
+                            <div id="strengthBar"></div>
+                        </div>
+                        <ul id="passwordFeedback"></ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,701 @@
+/* ==========================================
+   GUARDIANEYE — GLOBAL STYLES
+   ========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg: #080c14;
+    --panel: #0e1420;
+    --card: #111a29;
+    --border: #202c3e;
+    --text: #edf4ff;
+    --muted: #8795ab;
+    --cyan: #53e0d0;
+    --purple: #a78bfa;
+}
+
+/* Reset and base styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ==========================================
+   SIDEBAR AND NAVIGATION
+   ========================================== */
+
+.sidebar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 255px;
+    padding: 30px 20px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    transition: width 0.3s ease, padding 0.3s ease;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 52px;
+}
+
+.brand-icon {
+    display: grid;
+    place-items: center;
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    border-radius: 13px;
+    background: linear-gradient(135deg, var(--cyan), #7c72ff);
+    color: #08111b;
+    font: 700 25px 'Space Grotesk', sans-serif;
+}
+
+.brand h2 {
+    font: 700 19px 'Space Grotesk', sans-serif;
+    letter-spacing: -0.7px;
+}
+
+.brand p {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 1.5px;
+}
+
+.nav-label,
+.eyebrow {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.nav-label {
+    margin: 0 0 16px 10px;
+}
+
+.sidebar nav {
+    display: grid;
+    gap: 8px;
+}
+
+.nav-link {
+    padding: 13px 12px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    color: #9aa9bd;
+    font-size: 13px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    border-color: #24433f;
+    background: #14242c;
+    color: var(--cyan);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 18px 10px 0;
+    border-top: 1px solid var(--border);
+    color: #b7c5d7;
+    font-size: 11px;
+}
+
+.sidebar-footer p {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 7px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 10px #53e0d077;
+}
+
+/* Sidebar toggle button */
+
+.sidebar-toggle {
+    position: absolute;
+    top: 25px;
+    right: -16px;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #2b3a4e;
+    border-radius: 50%;
+    background: #152130;
+    color: var(--cyan);
+    font-size: 16px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+    background: #203746;
+    transform: scale(1.08);
+}
+
+.sidebar-toggle:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+}
+
+/* Collapsed sidebar — desktop */
+
+.app-container.sidebar-collapsed .sidebar {
+    align-items: center;
+    width: 56px;
+    min-width: 56px;
+    padding: 0;
+    overflow: visible;
+}
+
+.app-container.sidebar-collapsed .brand,
+.app-container.sidebar-collapsed .nav-label,
+.app-container.sidebar-collapsed .sidebar nav,
+.app-container.sidebar-collapsed .sidebar-footer {
+    display: none;
+}
+
+.app-container.sidebar-collapsed .sidebar-toggle {
+    top: 25px;
+    right: auto;
+    left: 12px;
+}
+
+.app-container.sidebar-collapsed .main-content {
+    max-width: none;
+}
+
+/* ==========================================
+   MAIN CONTENT AND DASHBOARD
+   ========================================== */
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 36px 44px 22px;
+    transition: padding 0.3s ease;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border);
+}
+
+.topbar h1 {
+    margin-top: 9px;
+    font: 600 30px 'Space Grotesk', sans-serif;
+    letter-spacing: -1px;
+}
+
+.topbar h1 span {
+    color: var(--cyan);
+}
+
+.system-status {
+    padding: 10px 12px;
+    border: 1px solid #285149;
+    border-radius: 8px;
+    background: #10221f;
+    color: var(--cyan);
+    font-size: 10px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+/* Welcome section */
+
+.welcome-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin: 32px 0 42px;
+    padding: 34px;
+    overflow: hidden;
+    border: 1px solid #263449;
+    border-radius: 16px;
+    background:
+        radial-gradient(ellipse at 90% 10%, #38316c55, transparent 42%),
+        linear-gradient(120deg, #111d2b, #101522);
+}
+
+.welcome-section h2 {
+    margin: 13px 0 10px;
+    font: 600 clamp(26px, 3vw, 38px) 'Space Grotesk', sans-serif;
+    letter-spacing: -1px;
+}
+
+.welcome-description {
+    max-width: 530px;
+    color: #9aa9bd;
+    font-size: 13px;
+    line-height: 1.9;
+}
+
+.shield-art {
+    display: grid;
+    place-items: center;
+    width: 105px;
+    height: 105px;
+    flex-shrink: 0;
+    transform: rotate(8deg);
+    border: 1px solid #55519b;
+    border-radius: 28px;
+    background: #28244866;
+    color: var(--cyan);
+    font-size: 67px;
+    box-shadow: 0 0 45px #6554d622;
+}
+
+/* Dashboard tool cards */
+
+.section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.section-heading h2 {
+    margin-top: 8px;
+    font: 600 23px 'Space Grotesk', sans-serif;
+}
+
+.tool-count {
+    padding-bottom: 4px;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.tool-card {
+    position: relative;
+    min-width: 0;
+    padding: 24px 21px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: linear-gradient(145deg, #121c2b, var(--panel));
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.tool-card:hover {
+    transform: translateY(-5px);
+    border-color: #3b6972;
+}
+
+.tool-icon {
+    display: grid;
+    place-items: center;
+    width: 47px;
+    height: 47px;
+    margin-bottom: 23px;
+    border-radius: 12px;
+    font-size: 25px;
+}
+
+.password-icon {
+    background: #193a3b;
+    color: #67e8d7;
+}
+
+.metadata-icon {
+    background: #30274c;
+    color: #c4a7ff;
+}
+
+.phishing-icon {
+    background: #402b32;
+    color: #ff9ca9;
+}
+
+.tool-number {
+    margin-bottom: 10px;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 1.7px;
+}
+
+.tool-card h3 {
+    margin-bottom: 12px;
+    font: 600 18px 'Space Grotesk', sans-serif;
+}
+
+.tool-card > p:not(.tool-number) {
+    min-height: 92px;
+    color: #94a3b8;
+    font-size: 12px;
+    line-height: 1.9;
+}
+
+.tool-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 24px;
+    color: var(--cyan);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.tool-link span {
+    font-size: 18px;
+    transition: transform 0.2s ease;
+}
+
+.tool-link:hover span {
+    transform: translate(3px, -3px);
+}
+
+.card-accent {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--cyan);
+    transition: width 0.3s ease;
+}
+
+.tool-card:hover .card-accent {
+    width: 100%;
+}
+
+/* Footer */
+
+.page-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: #64748b;
+    font-size: 9px;
+    letter-spacing: 1.3px;
+}
+
+/* ==========================================
+   PASSWORD ANALYZER TOOL PAGE
+   ========================================== */
+
+.tool-view {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px 0 40px;
+}
+
+.tool-view .section-heading {
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.tool-view .section-heading h2 {
+    font-size: clamp(26px, 3vw, 36px);
+    letter-spacing: -0.8px;
+}
+
+.feature-card {
+    width: 100%;
+    max-width: 760px;
+    padding: 32px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: linear-gradient(145deg, #121c2b, #0c1421);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+}
+
+.feature-card label {
+    display: block;
+    margin-bottom: 12px;
+    color: #e2e8f0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.password-input-group {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.password-input-group input {
+    flex: 1;
+    min-width: 0;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    background: #0a111c;
+    color: #f1f5f9;
+}
+
+.password-input-group input:focus {
+    border-color: #22d3ee;
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
+}
+
+.password-input-group button,
+#analyzePassword {
+    padding: 12px 20px;
+    border: 1px solid rgba(34, 211, 238, 0.35);
+    border-radius: 10px;
+    background: rgba(34, 211, 238, 0.1);
+    color: #67e8f9;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.password-input-group button:hover,
+#analyzePassword:hover {
+    transform: translateY(-1px);
+    background: rgba(34, 211, 238, 0.18);
+}
+
+.input-note {
+    margin: 12px 0 24px;
+    color: #94a3b8;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.tool-view #analyzePassword {
+    width: 100%;
+    min-height: 48px;
+    border: none;
+    font-weight: 700;
+}
+
+#passwordResults {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+
+#passwordResults h3 {
+    margin-bottom: 16px;
+    color: #e2e8f0;
+    font-size: 17px;
+}
+
+.strength-track {
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #263244;
+}
+
+#strengthBar {
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+#passwordFeedback {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0 0;
+    padding-left: 22px;
+    color: #cbd5e1;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+/* ==========================================
+   RESPONSIVE LAYOUT
+   ========================================== */
+
+@media (max-width: 1100px) {
+    .main-content {
+        padding: 30px 24px;
+    }
+
+    .tools-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .app-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .brand {
+        margin-bottom: 25px;
+    }
+
+    .sidebar nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sidebar-footer {
+        margin-top: 24px;
+    }
+
+    .sidebar-toggle {
+        top: 20px;
+        right: 20px;
+    }
+
+    .main-content {
+        padding: 24px 18px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .topbar h1 {
+        font-size: 27px;
+    }
+
+    .welcome-section {
+        padding: 23px;
+    }
+
+    .shield-art {
+        display: none;
+    }
+
+    .tools-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tool-card > p:not(.tool-number) {
+        min-height: auto;
+    }
+
+    .feature-card {
+        padding: 22px 18px;
+    }
+
+    .password-input-group {
+        flex-wrap: wrap;
+    }
+
+    .password-input-group input,
+    .password-input-group button {
+        width: 100%;
+    }
+
+    .tool-view {
+        padding-top: 10px;
+    }
+
+    .tool-view .section-heading {
+        align-items: flex-start;
+    }
+
+    /* Keep the collapsed sidebar as a horizontal top strip */
+    .app-container.sidebar-collapsed {
+        flex-direction: column;
+    }
+
+    .app-container.sidebar-collapsed .sidebar {
+        position: relative;
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        height: 56px;
+        min-height: 56px;
+        flex: 0 0 56px;
+        padding: 0;
+        align-items: stretch;
+        overflow: hidden;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        background: var(--panel);
+    }
+
+    .app-container.sidebar-collapsed .sidebar-toggle {
+        top: 8px;
+        right: 8px;
+        left: auto;
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 50%;
+        aspect-ratio: 1 / 1;
+    }
+
+    .app-container.sidebar-collapsed .main-content {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        padding: 24px 18px;
+        overflow-wrap: anywhere;
+    }
+}
