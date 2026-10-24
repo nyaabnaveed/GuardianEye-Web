@@ -39,107 +39,122 @@ if (togglePassword) {
 }
 
 // Analyze the password when the user clicks the button
-if (analyzePassword) {
-    analyzePassword.addEventListener("click", () => {
-        const password = passwordInput.value;
 
-        passwordResults.hidden = false;
-        passwordFeedback.innerHTML = "";
-        strengthBar.style.width = "0%";
+function runPasswordAnalysis() {
+    const password = passwordInput.value;
 
-        if (!password) {
-            strengthLabel.textContent = "Enter a password first";
-            addFeedback("Type a password to begin the analysis.");
-            return;
-        }
+    passwordResults.hidden = false;
+    passwordFeedback.innerHTML = "";
+    strengthBar.style.width = "0%";
 
-        let score = 0;
-        const feedback = [];
+    if (!password) {
+        strengthLabel.textContent = "Enter a password first";
+        addFeedback("Type a password to begin the analysis.");
+        return;
+    }
 
-        if (password.length >= 8) {
-            score++;
-        } else {
-            feedback.push("Use at least 8 characters.");
-        }
+    let score = 0;
+    const feedback = [];
 
-        if (password.length >= 12) {
-            score++;
-        } else {
-            feedback.push("Consider using 12 or more characters.");
-        }
+    if (password.length >= 8) {
+        score++;
+    } else {
+        feedback.push("Use at least 8 characters.");
+    }
 
-        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
-            score++;
-        } else {
-            feedback.push("Mix uppercase and lowercase letters.");
-        }
+    if (password.length >= 12) {
+        score++;
+    } else {
+        feedback.push("Consider using 12 or more characters.");
+    }
 
-        if (/\d/.test(password)) {
-            score++;
-        } else {
-            feedback.push("Include at least one number.");
-        }
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
+        score++;
+    } else {
+        feedback.push("Mix uppercase and lowercase letters.");
+    }
 
-        if (/[^A-Za-z0-9]/.test(password)) {
-            score++;
-        } else {
-            feedback.push("Consider including a special character.");
-        }
+    if (/\d/.test(password)) {
+        score++;
+    } else {
+        feedback.push("Include at least one number.");
+    }
 
-        // Identify common patterns that weaken passwords
-        const lowerPassword = password.toLowerCase();
-        const commonPatterns = [
-            "password",
-            "qwerty",
-            "123456",
-            "admin",
-            "letmein"
-        ];
+    if (/[^A-Za-z0-9]/.test(password)) {
+        score++;
+    } else {
+        feedback.push("Consider including a special character.");
+    }
 
-        const containsCommonPattern = commonPatterns.some(
-            pattern => lowerPassword.includes(pattern)
+    // Identify common patterns that weaken passwords
+    const lowerPassword = password.toLowerCase();
+    const commonPatterns = [
+        "password",
+        "qwerty",
+        "123456",
+        "admin",
+        "letmein"
+    ];
+
+    const containsCommonPattern = commonPatterns.some(
+        pattern => lowerPassword.includes(pattern)
+    );
+
+    if (containsCommonPattern) {
+        feedback.push(
+            "This password contains a commonly used pattern."
         );
+    }
 
-        if (containsCommonPattern) {
-            feedback.push(
-                "This password contains a commonly used pattern."
-            );
+    // Determine the final strength
+    let strength = "Weak";
+
+    if (
+        score >= 4 &&
+        password.length >= 12 &&
+        !containsCommonPattern
+    ) {
+        strength = "Strong";
+    } else if (
+        score >= 3 &&
+        !containsCommonPattern
+    ) {
+        strength = "Moderate";
+    }
+
+    strengthLabel.textContent = `Password Strength: ${strength}`;
+    strengthBar.style.width = `${(score / 5) * 100}%`;
+
+    if (strength === "Weak") {
+        strengthBar.style.backgroundColor = "#ef4444";
+    } else if (strength === "Moderate") {
+        strengthBar.style.backgroundColor = "#f59e0b";
+    } else {
+        strengthBar.style.backgroundColor = "#22c55e";
+    }
+
+    if (feedback.length === 0) {
+        feedback.push("No basic strength issues detected.");
+    }
+
+    feedback.forEach(addFeedback);
+}
+
+// Run analysis when the button is clicked.
+if (analyzePassword) {
+    analyzePassword.addEventListener("click", runPasswordAnalysis);
+}
+
+// Run analysis when Enter is pressed in the password field.
+if (passwordInput) {
+    passwordInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            runPasswordAnalysis();
         }
-
-        // Determine the final strength
-        let strength = "Weak";
-
-        if (
-            score >= 4 &&
-            password.length >= 12 &&
-            !containsCommonPattern
-        ) {
-            strength = "Strong";
-        } else if (
-            score >= 3 &&
-            !containsCommonPattern
-        ) {
-            strength = "Moderate";
-        }
-
-        strengthLabel.textContent = `Password Strength: ${strength}`;
-        strengthBar.style.width = `${(score / 5) * 100}%`;
-
-        if (strength === "Weak") {
-            strengthBar.style.backgroundColor = "#ef4444";
-        } else if (strength === "Moderate") {
-            strengthBar.style.backgroundColor = "#f59e0b";
-        } else {
-            strengthBar.style.backgroundColor = "#22c55e";
-        }
-
-        if (feedback.length === 0) {
-            feedback.push("No basic strength issues detected.");
-        }
-
-        feedback.forEach(addFeedback);
     });
 }
+
 
 // Add feedback safely without inserting HTML from user input
 function addFeedback(message) {
@@ -159,7 +174,10 @@ const metadataToolView = document.getElementById("metadata-tool");
 const phishingToolView = document.getElementById("phishing-tool");
 
 // Open the selected tool and hide the dashboard
-function openTool(toolName) {
+function openTool(toolName, addHistory = true) {
+    if (addHistory) {
+        history.pushState({ view: toolName }, "", "#" + toolName);
+    }    
     dashboardView.hidden = true;
     passwordToolView.hidden = true;
     metadataToolView.hidden = true;
@@ -193,7 +211,10 @@ function openTool(toolName) {
 }
 
 // Return to the dashboard
-function openDashboard() {
+function openDashboard(addHistory = true) {
+    if (addHistory) {
+        history.pushState({ view: "dashboard" }, "", "#dashboard");
+    }    
     dashboardView.hidden = false;
     passwordToolView.hidden = true;
     metadataToolView.hidden = true;
@@ -240,7 +261,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 
 // Connect the Password Analyzer dashboard card
 document.querySelectorAll(
-    '#password .tool-link, a[href="#password"]'
+    '#dashboardView #password .tool-link, #dashboardView a[href="#password"]'
 ).forEach(link => {
     link.addEventListener("click", event => {
         event.preventDefault();
@@ -249,7 +270,7 @@ document.querySelectorAll(
 });
 
 document.querySelectorAll(
-    '#metadata .tool-link, a[href="#metadata"]'
+    '#dashboardView #metadata .tool-link, #dashboardView a[href="#metadata"]'
 ).forEach(link => {
     link.addEventListener("click", event => {
         event.preventDefault();
@@ -373,7 +394,7 @@ const phishingRisk = document.getElementById("phishingRisk");
 const phishingSummary = document.getElementById("phishingSummary");
 const phishingWarnings = document.getElementById("phishingWarnings");
 
-checkPhishingButton.addEventListener("click", async () => {
+async function analyzePhishingUrl() {
     const url = phishingUrl.value.trim();
 
     if (!url) {
@@ -401,12 +422,13 @@ checkPhishingButton.addEventListener("click", async () => {
         }
 
         phishingRisk.textContent = result.risk_level;
+
         phishingResults.classList.remove(
             "risk-low",
             "risk-suspicious",
             "risk-high"
         );
-        
+
         if (result.risk_level === "Low Risk") {
             phishingResults.classList.add("risk-low");
         } else if (result.risk_level === "Suspicious") {
@@ -414,6 +436,7 @@ checkPhishingButton.addEventListener("click", async () => {
         } else {
             phishingResults.classList.add("risk-high");
         }
+
         phishingSummary.textContent = result.message;
         phishingWarnings.replaceChildren();
 
@@ -435,11 +458,22 @@ checkPhishingButton.addEventListener("click", async () => {
     } catch (error) {
         phishingStatus.textContent = error.message;
     }
+}
+
+// Run the checker when the button is clicked.
+checkPhishingButton.addEventListener("click", analyzePhishingUrl);
+
+// Run the checker when Enter is pressed in the URL field.
+phishingUrl.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        analyzePhishingUrl();
+    }
 });
 
 
 const phishingCardLink = document.querySelector(
-    '#phishing .tool-link, #phishing a[href="#phishing"]'
+    '#dashboardView #phishing .tool-link, #dashboardView a[href="#phishing"]'
 );
 
 if (phishingCardLink) {
@@ -447,4 +481,28 @@ if (phishingCardLink) {
         event.preventDefault();
         openTool("phishing");
     });
+}
+
+// Support browser Back and Forward navigation
+window.addEventListener("popstate", () => {
+    const currentView = window.location.hash.replace("#", "");
+
+    if (currentView === "password" || currentView === "password-tool") {
+        openTool("password", false);
+    } else if (currentView === "metadata" || currentView === "metadata-tool") {
+        openTool("metadata", false);
+    } else if (currentView === "phishing" || currentView === "phishing-tool") {
+        openTool("phishing", false);
+    } else {
+        openDashboard(false);
+    }
+});
+
+// Keep the Dashboard as the initial application history entry.
+if (!window.location.hash) {
+    history.replaceState(
+        { view: "dashboard" },
+        "",
+        "#dashboard"
+    );
 }
