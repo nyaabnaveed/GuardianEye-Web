@@ -155,14 +155,26 @@ function addFeedback(message) {
 
 const dashboardView = document.getElementById("dashboardView");
 const passwordToolView = document.getElementById("password-tool");
+const metadataToolView = document.getElementById("metadata-tool");
+const phishingToolView = document.getElementById("phishing-tool");
 
 // Open the selected tool and hide the dashboard
 function openTool(toolName) {
     dashboardView.hidden = true;
     passwordToolView.hidden = true;
+    metadataToolView.hidden = true;
+    phishingToolView.hidden = true;
 
     if (toolName === "password") {
         passwordToolView.hidden = false;
+    }
+
+    if (toolName === "metadata") {
+        metadataToolView.hidden = false;
+    }
+
+    if (toolName === "phishing") {
+        phishingToolView.hidden = false;
     }
 
     document.querySelectorAll(".nav-link").forEach(link => {
@@ -184,6 +196,8 @@ function openTool(toolName) {
 function openDashboard() {
     dashboardView.hidden = false;
     passwordToolView.hidden = true;
+    metadataToolView.hidden = true;
+    phishingToolView.hidden = true;
 
     document.querySelectorAll(".nav-link").forEach(link => {
         link.classList.remove("active");
@@ -208,9 +222,18 @@ document.querySelectorAll(".nav-link").forEach(link => {
         if (href === "#dashboard") {
             event.preventDefault();
             openDashboard();
-        } else if (href === "#password" || href === "#password-tool") {
+        } 
+        else if (href === "#password" || href === "#password-tool") {
             event.preventDefault();
             openTool("password");
+        } 
+        else if (href === "#metadata" || href === "#metadata-tool") {
+            event.preventDefault();
+            openTool("metadata");
+        }
+        else if (href === "#phishing" || href === "#phishing-tool") {
+            event.preventDefault();
+            openTool("phishing");
         }
     });
 });
@@ -224,3 +247,204 @@ document.querySelectorAll(
         openTool("password");
     });
 });
+
+document.querySelectorAll(
+    '#metadata .tool-link, a[href="#metadata"]'
+).forEach(link => {
+    link.addEventListener("click", event => {
+        event.preventDefault();
+        openTool("metadata");
+    });
+});
+
+const metadataImage = document.getElementById("metadataImage");
+const inspectMetadataButton = document.getElementById("inspectMetadata");
+const scrubMetadataButton = document.getElementById("scrubMetadata");
+const metadataStatus = document.getElementById("metadataStatus");
+const metadataResults = document.getElementById("metadataResults");
+const metadataSummary = document.getElementById("metadataSummary");
+const metadataList = document.getElementById("metadataList");
+
+function getSelectedImage() {
+    if (!metadataImage.files.length) {
+        metadataStatus.textContent = "Please select a JPEG image first.";
+        return null;
+    }
+
+    return metadataImage.files[0];
+}
+
+inspectMetadataButton.addEventListener("click", async () => {
+    const image = getSelectedImage();
+
+    if (!image) return;
+
+    const formData = new FormData();
+    formData.append("image", image);
+
+    metadataStatus.textContent = "Inspecting image metadata...";
+    metadataResults.hidden = true;
+
+    try {
+        const response = await fetch("/inspect-metadata", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Could not inspect this image.");
+        }
+
+        metadataList.replaceChildren();
+
+        const entries = Object.entries(result.metadata);
+
+        metadataSummary.textContent =
+            `${result.filename} — ${result.format} — ` +
+            `${result.metadata_count} EXIF metadata fields found.`;
+
+        if (entries.length === 0) {
+            const item = document.createElement("li");
+            item.textContent = "No EXIF metadata was found.";
+            metadataList.appendChild(item);
+        } else {
+            entries.forEach(([name, value]) => {
+                const item = document.createElement("li");
+                item.textContent = `${name}: ${value}`;
+                metadataList.appendChild(item);
+            });
+        }
+
+        metadataResults.hidden = false;
+        metadataStatus.textContent = "Metadata inspection complete.";
+
+    } catch (error) {
+        metadataStatus.textContent = error.message;
+    }
+});
+
+scrubMetadataButton.addEventListener("click", async () => {
+    const image = getSelectedImage();
+
+    if (!image) return;
+
+    const formData = new FormData();
+    formData.append("image", image);
+
+    metadataStatus.textContent = "Removing EXIF metadata...";
+
+    try {
+        const response = await fetch("/scrub-metadata", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            const result = await response.json();
+            throw new Error(result.error || "Could not clean this image.");
+        }
+
+        const cleanedImage = await response.blob();
+        const downloadUrl = URL.createObjectURL(cleanedImage);
+        const downloadLink = document.createElement("a");
+
+        downloadLink.href = downloadUrl;
+        downloadLink.download = "cleaned_image.jpg";
+        downloadLink.click();
+
+        URL.revokeObjectURL(downloadUrl);
+
+        metadataStatus.textContent =
+            "Cleaned image downloaded successfully.";
+
+    } catch (error) {
+        metadataStatus.textContent = error.message;
+    }
+});
+
+
+const phishingUrl = document.getElementById("phishingUrl");
+const checkPhishingButton = document.getElementById("checkPhishing");
+const phishingStatus = document.getElementById("phishingStatus");
+const phishingResults = document.getElementById("phishingResults");
+const phishingRisk = document.getElementById("phishingRisk");
+const phishingSummary = document.getElementById("phishingSummary");
+const phishingWarnings = document.getElementById("phishingWarnings");
+
+checkPhishingButton.addEventListener("click", async () => {
+    const url = phishingUrl.value.trim();
+
+    if (!url) {
+        phishingStatus.textContent = "Please enter a website URL first.";
+        phishingResults.hidden = true;
+        return;
+    }
+
+    phishingStatus.textContent = "Analyzing URL...";
+    phishingResults.hidden = true;
+
+    try {
+        const response = await fetch("/check-phishing", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ url: url })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Could not analyze this URL.");
+        }
+
+        phishingRisk.textContent = result.risk_level;
+        phishingResults.classList.remove(
+            "risk-low",
+            "risk-suspicious",
+            "risk-high"
+        );
+        
+        if (result.risk_level === "Low Risk") {
+            phishingResults.classList.add("risk-low");
+        } else if (result.risk_level === "Suspicious") {
+            phishingResults.classList.add("risk-suspicious");
+        } else {
+            phishingResults.classList.add("risk-high");
+        }
+        phishingSummary.textContent = result.message;
+        phishingWarnings.replaceChildren();
+
+        if (result.warnings.length === 0) {
+            const item = document.createElement("li");
+            item.textContent = "No suspicious patterns were detected.";
+            phishingWarnings.appendChild(item);
+        } else {
+            result.warnings.forEach((warning) => {
+                const item = document.createElement("li");
+                item.textContent = warning;
+                phishingWarnings.appendChild(item);
+            });
+        }
+
+        phishingResults.hidden = false;
+        phishingStatus.textContent = "URL analysis complete.";
+
+    } catch (error) {
+        phishingStatus.textContent = error.message;
+    }
+});
+
+
+const phishingCardLink = document.querySelector(
+    '#phishing .tool-link, #phishing a[href="#phishing"]'
+);
+
+if (phishingCardLink) {
+    phishingCardLink.addEventListener("click", event => {
+        event.preventDefault();
+        openTool("phishing");
+    });
+}

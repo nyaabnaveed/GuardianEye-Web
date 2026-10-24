@@ -170,6 +170,99 @@
                 </div>
             </section>
 
+            <!-- Metadata Scrubber View -->
+            <section class="feature-section tool-view" id="metadata-tool" hidden>
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">TOOL 02</p>
+                        <h2>Metadata Scrubber</h2>
+                    </div>
+                    <span class="tool-count">PRIVACY FIRST</span>
+                </div>
+            
+                <div class="feature-card">
+                    <h3>Inspect Your Image</h3>
+                    <p class="input-note">
+                        Check your JPEG image for hidden EXIF metadata before sharing it.
+                    </p>
+                
+                    <label for="metadataImage">Choose a JPEG image</label>
+                    <input
+                        type="file"
+                        id="metadataImage"
+                        accept=".jpg,.jpeg,image/jpeg"
+                    >
+                
+                    <p class="input-note">
+                        Your image will be processed to inspect or remove its metadata.
+                    </p>
+                
+                    <div class="metadata-actions">
+                        <button type="button" id="inspectMetadata">
+                            Inspect Metadata
+                        </button>
+                    
+                        <button type="button" id="scrubMetadata">
+                            Remove Metadata & Download
+                        </button>
+                    </div>
+                
+                    <p id="metadataStatus" class="input-note" aria-live="polite"></p>
+                
+                    <div id="metadataResults" hidden>
+                        <h3>Metadata Report</h3>
+                        <p id="metadataSummary"></p>
+                        <ul id="metadataList"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phishing Checker View -->
+            <section class="feature-section tool-view" id="phishing-tool" hidden>
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">TOOL 03</p>
+                        <h2>Phishing Checker</h2>
+                    </div>
+                    <span class="tool-count">LINK SECURITY</span>
+                </div>
+            
+                <div class="feature-card">
+                    <h3>Analyze a Suspicious URL</h3>
+                
+                    <p class="input-note">
+                        Check a URL for suspicious patterns that may indicate a phishing attempt.
+                    </p>
+                
+                    <label for="phishingUrl">Website URL</label>
+                
+                    <input
+                        type="text"
+                        id="phishingUrl"
+                        placeholder="e.g. https://example.com"
+                        autocomplete="url"
+                    >
+                
+                    <div class="metadata-actions">
+                        <button type="button" id="checkPhishing">
+                            Check URL
+                        </button>
+                    </div>
+                
+                    <p id="phishingStatus" class="input-note" aria-live="polite"></p>
+                
+                    <div id="phishingResults" hidden>
+                        <h3 id="phishingRisk"></h3>
+                        <p id="phishingSummary"></p>
+                        <ul id="phishingWarnings"></ul>
+                    </div>
+                
+                    <p class="input-note">
+                        Note: A low-risk result does not guarantee that a website is safe.
+                    </p>
+                </div>
+            </section>
+
         </main>
     </div>
 
